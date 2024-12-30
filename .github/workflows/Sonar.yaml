@@ -27,7 +27,7 @@ jobs:
       - name: Restore Packages
         run: nuget restore NunitParallel.sln
       - name: Start sonarscanner
-        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_Full" /n:"Full Repository" /o:"oikz" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx"
+        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_Full" /o:"oikz" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx"
       - name: Build solution
         run: msbuild NunitParallel.sln -t:rebuild -property:Configuration=Release
       - name: Test
@@ -55,13 +55,13 @@ jobs:
       - name: Restore Packages
         run: nuget restore NunitParallel.sln
       - name: Start sonarscanner
-        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_XUnitTests" /n:"XUnit Test Projects" /o:"oikz" /d:sonar.token="${{ secrets.XUNITTESTS_SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.inclusions="./XUnitTests/**/*"
+        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_XUnitTests" /o:"oikz" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.inclusions="./XUnitTests/**/*"
       - name: Build solution
         run: msbuild NunitParallel.sln -t:rebuild -property:Configuration=Release
       - name: Test
         run: dotnet vstest XUnitTests/bin/release/net481/XUnitTests.dll --parallel /Logger:"console;Verbosity=normal" /Logger:"trx;FileName=TestResults.trx"
       - name: End sonarscanner
-        run: dotnet sonarscanner end /d:sonar.login=${{ secrets.XUNITTESTS_SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
   
   testproject2-scan:
     runs-on: windows-latest
@@ -83,10 +83,10 @@ jobs:
       - name: Restore Packages
         run: nuget restore NunitParallel.sln
       - name: Start sonarscanner
-        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_TestProject2" /n:"TestProject2 Test Projects" /o:"oikz" /d:sonar.token="${{ secrets.TESTPROJECT2_SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.inclusions="./TestProject2/**/*"
+        run: dotnet sonarscanner begin /k:"oikz_SonarTesting_TestProject2" /o:"oikz" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vstest.reportsPaths="**/*.trx" /d:sonar.inclusions="./TestProject2/**/*"
       - name: Build solution
         run: msbuild NunitParallel.sln -t:rebuild -property:Configuration=Release
       - name: Test
         run: dotnet vstest TestProject2/bin/release/net481/TestProject2.dll --parallel /Logger:"console;Verbosity=normal" /Logger:"trx;FileName=TestResults.trx"
       - name: End sonarscanner
-        run: dotnet sonarscanner end /d:sonar.login=${{ secrets.TESTPROJECT2_SONAR_TOKEN }} 
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
